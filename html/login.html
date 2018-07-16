@@ -7,7 +7,40 @@
         <link rel = "stylesheet" href = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
         <script src = "https://code.jquery.com/jquery-1.11.3.min.js"></script>
         <script src = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <script>
+          $(document).ready(function(){
 
+
+
+
+
+
+          });
+
+          function redirect(msg){
+            window.location.replace(msg["url"]);
+          }
+
+          function loginClick(){
+            var formData = new FormData();
+            formData.append('us',document.getElementById("loginUserName").value);
+            formData.append('ps',document.getElementById("loginPassword").value);
+            
+            
+            fetch('http://localhost:3000', {
+              method: 'POST',
+              body: formData
+            })
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => redirect(response));  
+          }
+
+//console.log('Success:', response);
+          
+        
+        
+        </script>
     </head>
     <body>
         <script type="text/javascript" src="cordova.js"></script>
@@ -27,7 +60,7 @@
                 <br />
               <form>
                 <label for="text-basic">User Name:</label>
-                <input id="loginFirstName" type="text" name="text-basic" value="">
+                <input id="loginUserName" type="text" name="text-basic" value="">
                 <br />
 
                 <label for="password">Password:</label>
@@ -36,7 +69,7 @@
 
               </form>
 
-              <a onclick="myFunction()" id="loginButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Login</a>
+              <a onclick="loginClick()" id="loginButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Login</a>
               <a onclick="myFunction()" id="cancelButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Cancel</a>
               <a href="www.bummer.com">Forgot Password?</a>
           </div>
