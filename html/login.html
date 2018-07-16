@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <title>Blank App</title>
+        <link rel = "stylesheet" href = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <script src = "https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    </head>
+    <body>
+        <script type="text/javascript" src="cordova.js"></script>
+        <div data-role="page">
+
+          <!--
+                    <div data-role="header">
+                  		<h1>Your ToDo-s for Life :)</h1>
+                  	</div>
+          -->
+
+          <div id="loginPage">
+              <div class=header>
+                <h1>Login</h>
+              </div>
+
+                <br />
+              <form>
+                <label for="text-basic">User Name:</label>
+                <input id="loginFirstName" type="text" name="text-basic" value="">
+                <br />
+
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="loginPassword" value="" autocomplete="off">
+                <br />
+
+              </form>
+
+              <a onclick="myFunction()" id="loginButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Login</a>
+              <a onclick="myFunction()" id="cancelButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Cancel</a>
+              <a href="www.bummer.com">Forgot Password?</a>
+          </div>
+
+
+        </div><!-- /page -->
+
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <title>Blank App</title>
+        <link rel = "stylesheet" href = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <script src = "https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+
+    </head>
+    <body>
+        <script type="text/javascript" src="cordova.js"></script>
+        <div data-role="page">
+
+<!--
+          <div data-role="header">
+        		<h1>Your ToDo-s for Life :)</h1>
+        	</div>
+-->
+          <div id="signUpPage">
+              <div class=header>
+                <h1>Sign Up</h>
+              </div>
+
+                <br />
+              <form>
+                <label for="text-basic">First Name:</label>
+                <input id="signUpFirstName" type="text" name="text-basic" value="">
+                <br />
+
+                <label for="text-basic">Last Name:</label>
+                <input id="signUpLastName" type="text" name="text-basic" value="">
+                <br />
+
+                <label for="tel">Phone Number:</label>
+                <input type="tel" name="tel" id="signUpTel" value="">
+                <br />
+
+                <label for="text-basic">User Name:</label>
+                <input id=signUpUserName type="text" name="text-basic" value="">
+                <br />
+
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="signUpPassword" value="" autocomplete="off">
+                <br />
+
+              </form>
+
+              <a onclick="myFunction()" id="signUpsaveButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Save Details</a>
+          </div>
+
+
+        </div><!-- /page -->
+
+    </body>
+</html>
