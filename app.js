@@ -19,6 +19,21 @@ app.get('/signup', function (req, res) {
     res.sendFile(path.join(__dirname +'/html/signup.html'));
 })
 
+app.get('/todolist', function (req, res) {
+    res.sendFile(path.join(__dirname +'/html/todolist.html'));
+})
+
+
+app.get('/todolist/:userName', function (req, res) {
+    console.log(req.params.userName);
+  });
+
+
+app.post('/', function (req, res) {
+    console.log(req);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ 'url': '/todolist/'+'userNameIdan'}));
+  })
 // app.get('/signup', function (req, res) {
 //     res.sendFile(path.join(__dirname +'/html/signup.html'));
 // })
