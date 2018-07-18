@@ -4,78 +4,168 @@
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
         <title>Blank App</title>
-        <link rel = "stylesheet" href = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
         <script src = "https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <link rel = "stylesheet" href = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
         <script src = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
         <script>
           $(document).ready(function(){
-
-
-
-
-
+            $("#todo").hide();
 
           });
+
+          function showTryAgain(){
+
+          }
+
+          function loadToDo(user){
+            $("#todo").show();
+            $("#loginPage").hide();
+            
+            var hey = {
+              'un': user
+            };
+            
+            $.ajax({
+              type: "POST",
+              url: 'http://localhost:3000/getes',
+              data: hey,
+              success: function(data){
+                var idan = JSON.parse(data);
+                if(idan>0){
+                  //For each note create element and enter it.
+
+                }
+                else{
+                  showNoNotes();
+                }
+              }
+              ,error: function(){
+                alert("List notes failed");
+              }
+            });
+
+          }
 
           function redirect(msg){
             window.location.replace(msg["url"]);
           }
 
           function loginClick(){
-            var formData = new FormData();
-            formData.append('us',document.getElementById("loginUserName").value);
-            formData.append('ps',document.getElementById("loginPassword").value);
+            var hey = {
+              'un': document.getElementById("loginUserName").value ,
+              'pw': document.getElementById("loginPassword").value
+            };
+           /*
+            $.ajax({
+                type:"GET",
+                url: "http://localhost:3000/check",
+                data: hey,
+                dataType: JSON
+              })
+                .done(function( data ) {
+                  alert(data);
+                });
+                */
+
+            $.ajax({
+              type: "POST",
+              url: 'http://localhost:3000/',
+              data: hey,
+              success: function(data){
+                var idan = JSON.parse(data);
+                if(idan.length>0){
+                  loadToDo(idan[0].UserName);
+
+                }
+                else{
+                  showTryAgain();
+                }
+              }
+              ,error: function(){
+                alert("dail");
+              }
+            });
             
-            
-            fetch('http://localhost:3000', {
-              method: 'POST',
-              body: formData
-            })
-            .then(response => response.json())
-            .catch(error => console.error('Error:', error))
-            .then(response => redirect(response));  
+
           }
 
-//console.log('Success:', response);
+
           
         
         
         </script>
     </head>
     <body>
-        <script type="text/javascript" src="cordova.js"></script>
-        <div data-role="page">
+        
+        
+          <div data-role="page">
 
-          <!--
-                    <div data-role="header">
-                  		<h1>Your ToDo-s for Life :)</h1>
-                  	</div>
-          -->
 
-          <div id="loginPage">
-              <div class=header>
-                <h1>Login</h>
-              </div>
+            <div id="loginPage">
+                <div class=header>
+                  <h1>Login</h>
+                </div>
+  
+                  <br />
+                <form>
+                  <label for="text-basic">User Name:</label>
+                  <input id="loginUserName" type="text" name="text-basic" value="">
+                  <br />
+  
+                  <label for="password">Password:</label>
+                  <input type="password" name="password" id="loginPassword" value="" autocomplete="off">
+                  <br />
+  
+                </form>
+  
+                <a onclick="loginClick()" id="loginButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Login</a>
+                <a onclick="cancelButton()" id="cancelButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Cancel</a>
+                <a href="www.bummer.com">Forgot Password?</a>
+            </div>
 
-                <br />
+
+
+            <div id="todo">
               <form>
-                <label for="text-basic">User Name:</label>
-                <input id="loginUserName" type="text" name="text-basic" value="">
-                <br />
-
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="loginPassword" value="" autocomplete="off">
-                <br />
-
+                <fieldset data-role="collapsible">
+                    <legend>Add new Task</legend>
+                    <label for="textinput-f">Name of the Task:</label>
+                    <input type="text" name="textinput-f" id="textinput-f" placeholder="Description" value="">
+                    <label for="datetime-3">Destantion Time:"</label>
+                    <input type="datetime-local" data-clear-btn="false" name="datetime-3" id="datetime-3" value="">
+  
+                    <a onclick="myFunction()" id="submitNewToDoButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Create Task</a>
+                    <a onclick="clearNewTask()" id="deleteNewTask" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Cancel</a>
+                </fieldset>
               </form>
-
-              <a onclick="loginClick()" id="loginButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Login</a>
-              <a onclick="myFunction()" id="cancelButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Cancel</a>
-              <a href="www.bummer.com">Forgot Password?</a>
+              
+              <div class=header>
+                <h1>Your To do list: </h>
+              </div>
+  
+              <ul data-role="listview" data-inset="true" data-divider-theme="a">
+                  <li>
+                      <div style="font-size:15px" class="editableHeader">
+                          Task name1
+                      </div>
+                
+                      <div class="editableDesc">
+                        Note Description...
+                      </div>
+                    
+                      <input class="bro" value="X" type="button" />
+                      <input class="editNoteButton" value="Edit" type="button" />
+                      <input class="v" value="V" type="button"/>
+                </li>
+              </ul>
           </div>
 
+          </div>
+       
 
-        </div><!-- /page -->
+
+
+        
 
     </body>
 </html>
