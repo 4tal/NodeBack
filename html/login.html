@@ -68,10 +68,8 @@
             //-----------------------------------
             //Create the add new note even
             $("#submitNewToDoButton").click(function(){
+              //Not here as before.
               addNewNoteToDB();
-              $("#inputTitle").val("");
-              $("#inputDesc").val("");
-
             });
           });
 
@@ -142,6 +140,8 @@
                 </li>
             `);
             $(".update").hide();
+            $("#inputTitle").val("");
+            $("#inputDesc").val("");
 
           }
           function addNewNoteToDB(){
@@ -196,9 +196,7 @@
             $("#register").hide();
             $("#loginPage").hide();
             $("#userNameHolder").val(user);
-            
-
-
+          
             var hey = {
               'un': user
             };
