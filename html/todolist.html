@@ -4,29 +4,95 @@
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
         <title>Blank App</title>
-        <link rel = "stylesheet" href = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
         <script src = "https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <link rel = "stylesheet" href = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        
         <script src = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
-    </head>
-    <body>
+
         <script>
           $(document).ready(function(){
+            $(".v").hide();
+            $(".editNoteButton").click(function(){
+              $(".editableHeader").attr('contenteditable','true');
+              $(".editableDesc").attr('contenteditable','true');
+              
+            });
+
+            $(".editNoteButton").click(function(){
+              //$(this).siblings(".editableHeader").hide();
+              //$(this).closest(".editableHeader").attr('contenteditable','true');
+            });
+
+            //OnclickEdit:
+            //closest editable header      
+            //$('button').click(function(){
+  //  $('div').attr('contenteditable','true');
+//})
+            //
+            //
+            //OnClickDeleteCancel
+            
+
+
             $("#deleteNewTask").click(function(){
               $(".ui-collapsible-heading").click();
             });
           });
+
+          function clearNewTask(){
+            //$("#datetime-3").
+            //datetime-3
+            //textinput-f
+          }
+
+          function addNewNote(){
+            var hey = {
+              'firstName': document.getElementById("signUpFirstName").value ,
+              'lastName': document.getElementById("signUpLastName").value,
+              'phone':document.getElementById("signUpTel").value,
+              'userName':document.getElementById("signUpUserName").value,
+              'password':document.getElementById("signUpPassword").value
+            };
+           
+            
+
+            $.ajax({
+              type: "POST",
+              url: 'http://localhost:3000/addnewnote',
+              data: hey,
+              success: function(){alert("idan")},
+              dataType: JSON
+            });
+          }
+          
+          function editNote(){
+            //Choose the closest div make the input type into editing mode.
+            //Change the x into cancel
+            //Change the Edit into V
+          }
+          
+          
+          function removenote(){
+
+            //post request to delete it from the db.
+            //Redirect to do list
+          }
+
+
+          function listNotes(){
+            //Get the response:
+            //add the hidden value
+            //List all the notes();
+          }
+
         </script>
+
+
+    </head>
+    <body>
+        
         <div data-role="page">
-
-          <!--
-                    <div data-role="header">
-                  		<h1>Your ToDo-s for Life :)</h1>
-                  	</div>
-          -->
-
-
-          <div id="newToDoPage">
             <form>
               <fieldset data-role="collapsible">
                   <legend>Add new Task</legend>
@@ -36,55 +102,30 @@
                   <input type="datetime-local" data-clear-btn="false" name="datetime-3" id="datetime-3" value="">
 
                   <a onclick="myFunction()" id="submitNewToDoButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Create Task</a>
-                  <a onclick="myFunction()" id="deleteNewTask" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Cancel</a>
+                  <a onclick="clearNewTask()" id="deleteNewTask" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Cancel</a>
               </fieldset>
             </form>
+            
             <div class=header>
               <h1>Your To do list: </h>
             </div>
 
             <ul data-role="listview" data-inset="true" data-divider-theme="a">
-                <li><div>
-                  <h1>
-                    Task name1
-                  </h1>
-                  <p>
-                    Note Description...
-                  </p>
-                  <p>Time to do</p>
-                  <input value="X" type="button" />
-                  <input value="Edit" type="button" />
-
-                </div></li>
-                <li><div>
-                  <h1>
-                    Task name2
-                  </h1>
-                  <p>
-                    Note Description...
-                  </p>
-                  <p>Time to do</p>
-                  <input value="X" type="button" />
-                  <input value="Edit" type="button" />
-
-                </div></li>
-                <li><div>
-                  <h1>
-                    Task name3
-                  </h1>
-                  <p>
-                    Note Description...
-                  </p>
-                  <p>Time to do</p>
-                  <input value="X" type="button" />
-                  <input value="Edit" type="button" />
-
-                </div></li>
+                <li>
+                    <div style="font-size:15px" class="editableHeader">
+                        Task name1
+                    </div>
+              
+                    <div class="editableDesc">
+                      Note Description...
+                    </div>
+                  
+                    <input class="bro" value="X" type="button" />
+                    <input class="editNoteButton" value="Edit" type="button" />
+                    <input class="v" value="V" type="button"/>
+              </li>
             </ul>
-          </div>
-
-
-
+          
         </div><!-- /page -->
 
     </body>
