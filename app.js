@@ -1,6 +1,12 @@
 console.log("App Started");
 
 
+//TODO:
+//Modulate and export.
+//Some of the post entries-> get,put,
+//Add error logic.
+//Entries naming convensions.
+
 //Express
 const express = require('express')
 var app = express()
@@ -15,8 +21,7 @@ var path = require('path');
 var mongoose = require('mongoose');
 var db = "mongodb://4tal:123qwe@ds237620.mlab.com:37620/fun";
 
-
-
+//Mongoose - Models:
 var User = require('./User.model');
 var Task = require('./Task.model');
 
@@ -64,15 +69,12 @@ app.post('/getes', function (req, res) {
 
 //addnewnote
 app.post('/addnewnote', function (req, res) {
-    //Update the new note.
-    var _us = req.body["user"];
-    var _title = req.body["title"];
-    var _desc = req.body["desc"];    
-    
+    //Update the new note. 
+
     Task.create({
-        UserName: _us,
-        Title: _title,
-        Desc:_desc
+        UserName: req.body["user"],
+        Title: req.body["title"],
+        Desc:req.body["desc"]
     },
     function(err,herrr){
         if(err){
@@ -87,12 +89,7 @@ app.post('/addnewnote', function (req, res) {
 
 //delete
 app.post('/delete', function (req, res) {
-    
-    var _un = req.body["userName"];
-    var _ti = req.body["ti"];
-
-
-    Task.deleteOne({UserName:_un,Title:_ti},
+    Task.deleteOne({UserName:req.body["userName"],Title:req.body["ti"]i},
         function(err,herrr){
             if(err){
                 return res.send("Error");
@@ -106,16 +103,9 @@ app.post('/delete', function (req, res) {
 
 //update
 app.post('/update', function (req, res) {
-    
-    var _currTi = req.body["currTit"];
-    var _currDe = req.body["currDes"];
-    var _fuTi = req.body["futTit"];
-    var _fuDe = req.body["futDes"];    
-    var _user = req.body["userName"];
+    var conditions = { $and:[{UserName: req.body["userName"]},{Title:req.body["currTit"]}] };
 
-    var conditions = { $and:[{UserName: _user},{Title:_currTi}] };
-
-    Task.update(conditions,{Title:_fuTi,Desc:_fuDe},
+    Task.update(conditions,{Title:req.body["futTit"],Desc:req.body["futDes"]},
     function(err,herrr){
         if(err){
             return res.send("Error");
@@ -126,18 +116,13 @@ app.post('/update', function (req, res) {
     });
 })
 
-
 //Register function
 app.post('/signup', function (req, res) {
-    var _us = req.body["userName"];
-    var _pw = req.body["password"];
-    var _fn = req.body["firstName"];
-    var _ln = req.body["lastName"];
     User.create({
-            UserName: _us,
-            Password: _pw,
-            FirstName: _fn,
-            LastName: _ln
+            UserName: req.body["userName"],
+            Password: req.body["password"],
+            FirstName: req.body["firstName"],
+            LastName: req.body["lastName"]
         },
         function(err,herrr){
         if(err){
