@@ -4,39 +4,218 @@
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
         <title>Blank App</title>
+        <script src=https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js></script>
         <script src = "https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.bundle.min.js" integrity="sha384-CS0nxkpPy+xUkNGhObAISrkg/xjb3USVCwy+0/NMzd5VxgY4CMCyTkItmy5n0voC" crossorigin="anonymous"></script>
         <link rel = "stylesheet" href = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        
         <script src = "https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" />
         <script>
           $(document).ready(function(){
             $("#todo").hide();
+            $("#loginPage").hide();
+            $("#register").hide();
+            //
+            $("#userNameHolder").hide();
+            $("#noteCounter").hide();
+            $("#noteDesc").hide();
+            $("#noteTitle").hide();
 
+            
+            //Delete Note
+            $('#noteHolder').on('click','.bro', function() {
+                deleteTask($(this).closest('div').find('.Title').text());
+                $(this).closest('li').hide();
+            });
+
+            //Edit Note
+            $('#noteHolder').on('click','.editNoteButton', function() {
+              $(this).closest('div').find('.Desc').attr('contenteditable','true');
+              $(this).closest('div').find('.Title').attr('contenteditable','true');
+              $(this).closest('div').find('.update').show();
+              $(this).hide();
+
+              $("#noteTitle").val($(this).closest('div').find('.Title').text());
+              $("#noteDesc").val($(this).closest('div').find('.Desc').text());
+            });
+
+            //Update
+            $('#noteHolder').on('click','.update', function() {
+              updateNoteInDB(
+                $("#noteTitle").val(),
+                $("#noteDesc").val(),
+                $(this).closest('div').find('.Title').text(),
+                $(this).closest('div').find('.Desc').text()
+              );
+              $(this).closest('div').find('.Desc').attr('contenteditable','false');
+              $(this).closest('div').find('.Title').attr('contenteditable','false');
+              $(this).closest('div').find('.editNoteButton').show();
+              $(this).hide();
+            });
+
+
+            //Home
+            $("#regButton").click(function(){
+              $("#register").show();
+              $("#home").hide();
+            });
+
+            $("#logInButton").click(function(){
+              $("#loginPage").show();
+              $("#home").hide();
+            });
+            //-----------------------------------
+            //Create the add new note even
+            $("#submitNewToDoButton").click(function(){
+              addNewNoteToDB();
+              $("#inputTitle").val("");
+              $("#inputDesc").val("");
+
+            });
           });
 
-          function showTryAgain(){
+          function cancelButton(){
+            $("#loginPage").hide();
+            $("#home").show();
+          }
+          function deleteTask(elementTo){
+            document.getElementById("userNameHolder").value
+            //Add Ajax call to delete it, on return 
+            //Delete the combination
+            var hey = {
+                'userName': document.getElementById("userNameHolder").value,
+                'ti': elementTo
+              };
+              $.ajax({
+                type: "POST",
+                url: 'http://10.0.2.2:3000/delete',
+                data: hey,
+                success: function(data){
+                  if(data=="OK"){
+                    
+                  }
+                },
+              });
 
+          }
+
+          function updateNoteInDB(currTi,currDe,fuTi,fuDe){
+            var hey = {
+                'userName': document.getElementById("userNameHolder").value,
+                'currTit': currTi ,
+                'currDes': currDe,
+                'futTit':fuTi,
+                'futDes':fuDe
+              };
+              $.ajax({
+                type: "POST",
+                url: 'http://10.0.2.2:3000/update',
+                data: hey,
+                success: function(data){
+                  if(data=="OK"){
+                    
+                  }
+                },
+              });
+          }
+          
+
+          function addNewNoteToPage(noteTitle,noteDesc){
+            $("#noteCounter").val(parseInt(document.getElementById("noteCounter").value)+1);
+            
+            
+            $("#noteHolder").append(`
+                <li id="listItem`+ document.getElementById("noteCounter").value
+                +`"><div class="father">
+                      <div class="Title" style="font-size:15px">`+
+                        noteTitle
+                      +`</div>
+                      <div class="Desc">
+                        `+
+                        noteDesc
+                      +`</div><input id="del`+document.getElementById("noteCounter").value+
+                      `" class="bro" value="X" type="button" />
+                      <input class="update" value="V" type="button" />
+                      <input id="edit`+document.getElementById("noteCounter").value+`"class="editNoteButton" value="Edit" type="button" />
+                    <div>
+                </li>
+            `);
+            $(".update").hide();
+
+          }
+          function addNewNoteToDB(){
+
+            var hey = {
+              
+                'user' : document.getElementById("userNameHolder").value,
+                'title': document.getElementById("inputTitle").value ,
+                'desc': document.getElementById("inputDesc").value
+              };
+
+              $.ajax({
+                type: "POST",
+                url: 'http://10.0.2.2:3000/addnewnote',
+                data: hey,
+                success: function(data){
+                  if(data=="OK"){
+                    addNewNoteToPage(document.getElementById("inputTitle").value,document.getElementById("inputDesc").value);
+                  }
+                },
+              });
+          }
+
+          //SignUp (Register Page)
+          function signInClick(){
+              var hey = {
+                'firstName': document.getElementById("signUpFirstName").value ,
+                'lastName': document.getElementById("signUpLastName").value,
+                'userName':document.getElementById("signUpUserName").value,
+                'password':document.getElementById("signUpPassword").value
+              };
+              $.ajax({
+                type: "POST",
+                url: 'http://10.0.2.2:3000/signup',
+                data: hey,
+                success: function(data){
+                  if(data=="OK"){
+                    loadToDo(document.getElementById("signUpUserName").value);
+                  }
+                },
+              });
+
+            }
+
+          function showNoNotes(){
+            alert("No notes Yet");
           }
 
           function loadToDo(user){
             $("#todo").show();
             $("#loginPage").hide();
+            $("#register").hide();
+            $("#loginPage").hide();
+            $("#userNameHolder").val(user);
             
+
+
             var hey = {
               'un': user
             };
             
             $.ajax({
               type: "POST",
-              url: 'http://localhost:3000/getes',
+              url: 'http://10.0.2.2:3000/getes',
               data: hey,
               success: function(data){
                 var idan = JSON.parse(data);
-                if(idan>0){
-                  //For each note create element and enter it.
-
+                if(idan.length>0){
+                  idan.forEach(element => {
+                    addNewNoteToPage(element["Title"],element["Desc"]);
+                  });
                 }
                 else{
-                  showNoNotes();
+                  swal("No notes yet, Try to add one :)");
                 }
               }
               ,error: function(){
@@ -46,61 +225,47 @@
 
           }
 
-          function redirect(msg){
-            window.location.replace(msg["url"]);
-          }
 
           function loginClick(){
             var hey = {
               'un': document.getElementById("loginUserName").value ,
               'pw': document.getElementById("loginPassword").value
             };
-           /*
-            $.ajax({
-                type:"GET",
-                url: "http://localhost:3000/check",
-                data: hey,
-                dataType: JSON
-              })
-                .done(function( data ) {
-                  alert(data);
-                });
-                */
 
             $.ajax({
               type: "POST",
-              url: 'http://localhost:3000/',
+              url: 'http://10.0.2.2:3000/',
               data: hey,
               success: function(data){
                 var idan = JSON.parse(data);
                 if(idan.length>0){
                   loadToDo(idan[0].UserName);
-
                 }
                 else{
-                  showTryAgain();
+                  swal("Please try again");
                 }
               }
               ,error: function(){
                 alert("dail");
               }
             });
-            
-
           }
 
-
-          
-        
         
         </script>
     </head>
     <body>
-        
-        
-          <div data-role="page">
+      <div data-role="page">
+            <div id=home>
+              <div class=header>
+                <h1>Home sweet home</h>
+              </div>
 
+              <img src="http://www.angelfire.com/ri/rishpy/images/mooli.jpg" alt="Mountain View">
+              <a id="regButton" class="ui-btn ui-shadow">Register</a>
+              <a id="logInButton" class="ui-btn ui-shadow">Sign In</a>
 
+            </div>
             <div id="loginPage">
                 <div class=header>
                   <h1>Login</h>
@@ -123,19 +288,21 @@
                 <a href="www.bummer.com">Forgot Password?</a>
             </div>
 
-
-
             <div id="todo">
+              <input type="text" id="userNameHolder" value="">
+              <input type="text" id="noteCounter" value="0">
+              <input type="text" id="noteDesc" value="">
+              <input type="text" id="noteTitle" value="">
+              
               <form>
                 <fieldset data-role="collapsible">
                     <legend>Add new Task</legend>
                     <label for="textinput-f">Name of the Task:</label>
-                    <input type="text" name="textinput-f" id="textinput-f" placeholder="Description" value="">
-                    <label for="datetime-3">Destantion Time:"</label>
-                    <input type="datetime-local" data-clear-btn="false" name="datetime-3" id="datetime-3" value="">
+                    <input type="text" name="textinput-f" id="inputTitle" placeholder="Name" value="">
+                    <label for="textinput-f">Description:</label>
+                    <input type="text" name="textinput-f" id="inputDesc" placeholder="Description" value="">
   
-                    <a onclick="myFunction()" id="submitNewToDoButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Create Task</a>
-                    <a onclick="clearNewTask()" id="deleteNewTask" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Cancel</a>
+                    <a id="submitNewToDoButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Create Task</a>
                 </fieldset>
               </form>
               
@@ -143,29 +310,37 @@
                 <h1>Your To do list: </h>
               </div>
   
-              <ul data-role="listview" data-inset="true" data-divider-theme="a">
-                  <li>
-                      <div style="font-size:15px" class="editableHeader">
-                          Task name1
-                      </div>
-                
-                      <div class="editableDesc">
-                        Note Description...
-                      </div>
-                    
-                      <input class="bro" value="X" type="button" />
-                      <input class="editNoteButton" value="Edit" type="button" />
-                      <input class="v" value="V" type="button"/>
-                </li>
+              <ul id="noteHolder">
+
               </ul>
-          </div>
+            </div>
+            <div id="register">
+              <div class=header>
+                <h1>Sign Up</h>
+              </div>
 
-          </div>
-       
+                <br />
+              <form>
+                <label for="text-basic">First Name:</label>
+                <input id="signUpFirstName" type="text" name="text-basic" value="">
+                <br />
 
+                <label for="text-basic">Last Name:</label>
+                <input id="signUpLastName" type="text" name="text-basic" value="">
+                <br />
 
+                <label for="text-basic">User Name:</label>
+                <input id=signUpUserName type="text" name="text-basic" value="">
+                <br />
 
-        
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="signUpPassword" value="" autocomplete="off">
+                <br />
 
+              </form>
+
+              <a onclick="signInClick()" id="signUpsaveButton" style="height:30px; font-size:20px;font-weight: bold;" href="#" class="ui-btn ui-shadow">Save Details</a>
+            </div>
+      </div>
     </body>
 </html>
