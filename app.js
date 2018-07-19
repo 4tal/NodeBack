@@ -21,11 +21,9 @@ var User = require('./User.model');
 var Task = require('./Task.model');
 
 
-
 mongoose.connect(db, {
     useNewUrlParser: true
 });
-
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -34,134 +32,121 @@ app.use(bodyParser.json());
 app.use(express.static('html'));
 
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname +'/html/index.html'));
+  res.sendFile(path.join(__dirname +'/html/login.html'));
 })
+
 
 app.get('/login', function (req, res) {
     res.sendFile(path.join(__dirname +'/html/login.html'));
 })
 
-app.get('/signup', function (req, res) {
-    res.sendFile(path.join(__dirname +'/html/signup.html'));
-})
-
-app.get('/todolist', function (req, res) {
-    res.sendFile(path.join(__dirname +'/html/todolist.html'));
-})
-
-
-app.get('/todolist/:userName', function (req, res) {
-    Task.find({userName:"idan"});
-    
-    (req.params.userName);
-    
-  });
-
-
  //Signin 
 app.post('/', function (req, res) {
-    // User.find().and(
-    //     $and: [
-    //         { UserName : req.body["un"]},
-    //         { Password : req.body["pw"]}
-    //     ] 
-    // )
-
-
-    // .exec(function(err,users){
-    //     if(err){
-    //         //Redirect to the login.
-    //         res.send('error');
-    //     }else{
-    //         //Redirect to the todolist with header array.
-    //         console.log(users);
-    //     }
-    // })
-    //res.send(JSON.stringify({ 'url': '/todolist/'+' '}));
-    
     User.find().and([{ UserName: req.body["un"] }, { Password: req.body["pw"] }])
     .then(users => { 
-        //if(users.length>0){
-        //res.send(users.length);
         res.send(JSON.stringify(users))
-        //}
-        console.log(users)
      })
     .catch(error => { 
         console.log(error)
      })
 })
-
 
 //Get New Notes
 app.post('/getes', function (req, res) {
     Task.find({ UserName: req.body["un"] })
     .then(tasks => { 
         res.send(JSON.stringify(tasks))
-        console.log(tasks)
      })
     .catch(error => { 
         console.log(error)
      })
 })
 
-
-app.get('/check', function (req, res) {
-    User.find().and([{ UserName: req.body["un"] }, { Password: req.body["pw"] }])
-    .then(users => { 
-        //if(users.length>0){
-        //res.send(users.length);
-        res.send(JSON.stringify( users))
-        //}
-        console.log(users)
-     })
-    .catch(error => { 
-        console.log(error)
-     })
-    
-  });
-
 //addnewnote
 app.post('/addnewnote', function (req, res) {
     //Update the new note.
-    //on callback res.send(JSON.stringify({ 'url': '/todolist/'+' '}))
-    var _us = req.body["userName"];
-    var _title = req.body["password"];
-    var _desc = req.body["firstName"];    
+    var _us = req.body["user"];
+    var _title = req.body["title"];
+    var _desc = req.body["desc"];    
     
     Task.create({
         UserName: _us,
         Title: _title,
         Desc:_desc
-    })
-    res.send(JSON.stringify({ 'url': '/todolist'}));
+    },
+    function(err,herrr){
+        if(err){
+            return res.send("Error");
+        }
+        else{
+            return res.send("OK");
+        }
+    });
 })
 
 
+//delete
+app.post('/delete', function (req, res) {
+    
+    var _un = req.body["userName"];
+    var _ti = req.body["ti"];
+
+
+    Task.deleteOne({UserName:_un,Title:_ti},
+        function(err,herrr){
+            if(err){
+                return res.send("Error");
+            }
+            else{
+                return res.send("OK");
+            }
+    });
+})
+
+
+//update
+app.post('/update', function (req, res) {
+    
+    var _currTi = req.body["currTit"];
+    var _currDe = req.body["currDes"];
+    var _fuTi = req.body["futTit"];
+    var _fuDe = req.body["futDes"];    
+    var _user = req.body["userName"];
+
+    var conditions = { $and:[{UserName: _user},{Title:_currTi}] };
+
+    Task.update(conditions,{Title:_fuTi,Desc:_fuDe},
+    function(err,herrr){
+        if(err){
+            return res.send("Error");
+        }
+        else{
+            return res.send("OK");
+        }
+    });
+})
+
+
+//Register function
 app.post('/signup', function (req, res) {
     var _us = req.body["userName"];
     var _pw = req.body["password"];
     var _fn = req.body["firstName"];
     var _ln = req.body["lastName"];
     User.create({
-            userName: _us,
+            UserName: _us,
             Password: _pw,
             FirstName: _fn,
             LastName: _ln
-
-        },function(err,herrr){
+        },
+        function(err,herrr){
         if(err){
             return res.send("Error");
-        }else{
-            return res.send(JSON.stringify({ 'url': '/login'}))
+        }
+        else{
+            return res.sendStatus(200)
         }
     });
-   
-    
-    //Now add inserttion to the mongo.
-    res.setHeader('Content-Type', 'application/json');
-    //Return rendered page
-    res.send(JSON.stringify({ 'url': '/login'}));
 })
 
 
